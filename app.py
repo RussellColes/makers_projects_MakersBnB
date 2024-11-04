@@ -15,6 +15,17 @@ app = Flask(__name__)
 def get_index():
     return render_template('index.html')
 
+@app.route('/user', methods=['GET'])
+def get_user():
+    name = request.args.get('name')
+    return render_template('user.html', name=name)
+
+@app.route('/add_property', methods=['GET'])
+def add_property():
+    return "ToDo"
+
+# http://127.0.0.1:5001/user?name=Reena
+
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
 # if started in test mode.
