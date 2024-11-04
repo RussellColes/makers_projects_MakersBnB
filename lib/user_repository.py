@@ -16,3 +16,10 @@ class UserRepository:
     
     def add(self, user):
         self._connection.execute('INSERT INTO users (name, email, password) VALUES (%s,%s,%s)', [user.name, user.email, user.password])
+
+    def get(self, id):
+        records = self._connection.execute('SELECT * FROM users WHERE id = %s', [id])
+        record = records [0]
+        return User(record["id"], record["name"], record["email"], record["password"])
+
+    
