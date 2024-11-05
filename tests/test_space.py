@@ -17,7 +17,7 @@ def test_constructs_with_fields():
 '''
 Test for Equality
 '''
-def test_eqality():
+def test_eqality_space():
     space_1 = Space(1, "Title 1", "Location 1", "This is a description", 100, 1)
     space_2 = Space(1, "Title 1", "Location 1", "This is a description", 100, 1)
     assert space_1 == space_2
@@ -26,6 +26,6 @@ def test_eqality():
 '''
 Test for Formatting
 '''
-def test_formatting():
+def test_formatting_space():
     space = Space(1, "Title 1", "Location 1", "This is a description", 100, 1)
     assert str(space) == "Space(1, Title 1, Location 1, This is a description, 100, 1)"
