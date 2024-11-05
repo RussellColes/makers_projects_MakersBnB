@@ -16,6 +16,7 @@ CREATE TABLE spaces (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255),
     location VARCHAR(255),
+    headline_description VARCHAR(255),
     description VARCHAR(255),
     price_per_night int,
     user_id int,
@@ -24,6 +25,6 @@ CREATE TABLE spaces (
     on delete cascade
 );
 
-INSERT INTO spaces (title, location, description, price_per_night, user_id) VALUES ('Title 1', 'Location 1', 'Description 1', 10, 1);
-INSERT INTO spaces (title, location, description, price_per_night, user_id) VALUES ('Title 2', 'Location 2', 'Description 2', 20, 2);
-INSERT INTO spaces (title, location, description, price_per_night, user_id) VALUES ('Title 3', 'Location 3', 'Description 3', 30, 1);
+INSERT INTO spaces (title, location, headline_description, description, price_per_night, user_id) VALUES ('Title 1', 'Location 1', 'Headline description 1', 'Description 1', 10, 1);
+INSERT INTO spaces (title, location, headline_description, description, price_per_night, user_id) VALUES ('Title 2', 'Location 2', 'Headline description 2', 'Description 2', 20, 2);
+INSERT INTO spaces (title, location, headline_description, description, price_per_night, user_id) VALUES ('Title 3', 'Location 3', 'Headline description 3', 'Description 3', 30, 1);
