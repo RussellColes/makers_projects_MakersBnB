@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spaces List</title>
+</head>
+<body>
+    <h1>Spaces</h1>
+    {% for space in spaces%}
+        <ul>
+            <li style="list-style-type: none;" class="t-title"><a href="spaces/{{space.id}}">Space: {{space.title}}</a></li>
+        </ul>
+    {% endfor %}
+</body>
+</html>
