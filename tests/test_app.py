@@ -20,7 +20,7 @@ When a user visits /spaces
 They see a list of spaces displayed on the page
 '''
 def test_get_spaces(page, test_web_address, db_connection):
-    db_connection.seed('seeds/spaces.sql')
+    db_connection.seed('seeds/users_and_spaces.sql')
     page.goto(f"http://{test_web_address}/spaces")
     spaces_items = page.locator("li")
     expect(spaces_items).to_contain_text([
@@ -33,7 +33,7 @@ When a user clicks on a space
 The details of the space are displayed
 '''
 def test_click_on_space_link(page, test_web_address, db_connection):
-    db_connection.seed("seeds/spaces.sql")
+    db_connection.seed("seeds/users_and_spaces.sql")
     page.goto(f"http://{test_web_address}/spaces")
     page.click("text=Title 1")
     title_tag = page.locator(".t-title").nth(0)
