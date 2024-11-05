@@ -21,5 +21,10 @@ class UserRepository:
         records = self._connection.execute('SELECT * FROM users WHERE id = %s', [id])
         record = records [0]
         return User(record["id"], record["name"], record["email"], record["password"])
+    
+    def get_from_email(self, email):
+        records = self._connection.execute('SELECT * FROM users WHERE email = %s', [email])
+        record = records [0]
+        return User(record["id"], record["name"], record["email"], record["password"])
 
     
