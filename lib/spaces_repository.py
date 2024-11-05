@@ -11,7 +11,7 @@ class SpaceRepository:
         rows = self._connection.execute('SELECT * FROM spaces')
         spaces = []
         for row in rows:
-            item = Space(row["id"], row["title"], row["location"], row["description"], row["price_per_night"], row["user_id"])
+            item = Space(row["id"], row["title"], row["location"], row["headline_description"], row["description"], row["price_per_night"], row["user_id"])
             spaces.append(item)
         return spaces
     
@@ -21,12 +21,12 @@ class SpaceRepository:
             'SELECT * from spaces WHERE id = %s', [id])
         row = rows[0]
         return Space(row["id"], row["title"],
-                    row["location"], row["description"], row["price_per_night"], row["user_id"])
+                    row["location"], row["headline_description"], row["description"], row["price_per_night"], row["user_id"])
     
     def create(self, space):
         rows = self._connection.execute(
-            'INSERT INTO spaces (title, location, description, price_per_night, user_id) VALUES (%s, %s, %s, %s, %s) RETURNING id', 
-            [space.title, space.location, space.description, space.price_per_night, space.user_id])
+            'INSERT INTO spaces (title, location, headline_description, description, price_per_night, user_id) VALUES (%s, %s, %s, %s, %s, %s) RETURNING id', 
+            [space.title, space.location, space.headline_description, space.description, space.price_per_night, space.user_id])
         row = rows[0]
         space.id = row["id"]
         return space
