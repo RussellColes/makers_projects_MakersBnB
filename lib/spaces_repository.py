@@ -1,4 +1,4 @@
-from lib.space import *
+from lib.space import Space
 
 
 class SpaceRepository:
@@ -6,11 +6,33 @@ class SpaceRepository:
     def __init__(self, connection):
         self._connection = connection
 
-    # Retrieve all books
+    # Retrieve all spaces
     def all(self):
-        rows = self._connection.execute('SELECT * from spaces')
+        rows = self._connection.execute('SELECT * FROM spaces')
         spaces = []
         for row in rows:
-            item = Space(row["id"], row["location"], row["description"], row["price_per_night"], row["user_id"])
+            item = Space(row["id"], row["title"], row["location"], row["description"], row["price_per_night"], row["user_id"])
             spaces.append(item)
         return spaces
+    
+    # Find a single space by its id
+    def find(self, id):
+        rows = self._connection.execute(
+            'SELECT * from spaces WHERE id = %s', [id])
+        row = rows[0]
+        return Space(row["id"], row["title"],
+                    row["location"], row["description"], row["price_per_night"], row["user_id"])
+    
+    
+    def create(self, space):
+        rows = self._connection.execute(
+            'INSERT INTO spaces (title, location, description, price_per_night, user_id) VALUES (%s, %s, %s, %s, %s) RETURNING id',
+            [space.title, space.location, space.description, space.price_per_night, space.user_id])
+        row = rows[0]
+        space.id = row["id"]
+        return space
+    
+    
+    def delete(self, id):
+        self._connection.execute('DELETE FROM spaces WHERE id = %s', [id])
+        return None
