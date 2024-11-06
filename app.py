@@ -14,30 +14,37 @@ app.secret_key = 'supersecretkey(donttellanyoneorpirateswillGETyou)'
 # Login Manager
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
-    return UserRepository.get(user_id)
+    connection = get_flask_database_connection(app)
+    userrepo = UserRepository(connection)
+    return userrepo.get(user_id)
 
 # == Your Routes Here ==
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    connection = get_flask_database_connection(app)
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['pwd']
-        # user = UserRepository.get_from_email(email) DOESN'T WORK GRR
-        if email == user.email and password == user.password:
+        userrepo = UserRepository(connection)
+        user = userrepo.get_from_email(email)
+        if not user:
+            return render_template('invalid_login.html')
+        if user and password == user.password:
             login_user(user)
-            return render_template('user.html')
+            return redirect("/", code = 302) #PLEASE CHANGE THE REDIRECT TO THE "HOME" PAGE
         else:
             return render_template('invalid_login.html')
-    
     return render_template('login.html')
 
-# GET /
+
 # Returns the homepage
 @app.route('/', methods=['GET'])
+@login_required
 def get_index():
     return render_template('index.html')
 
