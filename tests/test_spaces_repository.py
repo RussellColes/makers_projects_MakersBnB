@@ -18,6 +18,12 @@ def test_get_single_space(db_connection):
     space = repository.find(3)
     assert space == Space(3, 'Title 3', 'Location 3', 'Headline description 3', 'Description 3', 30, 1)
 
+def test_find_price_per_night(db_connection):
+    db_connection.seed("seeds/users_and_spaces.sql")
+    repository = SpaceRepository(db_connection)
+    price_per_night = repository.find_price_per_night(3)
+    assert price_per_night == 30
+
 
 
 def test_create_space(db_connection):
