@@ -1,12 +1,14 @@
 import os
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from lib.user_repository import UserRepository
 from lib.user import User
 from lib.database_connection import get_flask_database_connection
 from lib.spaces_repository import SpaceRepository
+from lib.booking_repository import *
 from lib.availability_repository import *
 from lib.space import Space
+from datetime import datetime
 
 # Create a new Flask app
 app = Flask(__name__)
@@ -94,6 +96,26 @@ def create_space():
     space = Space(None, title, location, headline_description, description, price_per_night, user_id)
     space = repository.create(space)
     return redirect (f"/spaces/{space.id}")
+
+# Requests a new booking from data input in the form on the space page
+@app.route('/spaces/<int:id>', methods=['POST'])
+def create_booking(id):
+    connection = get_flask_database_connection(app)
+    booking_repository = BookingRepository(connection)
+    space_repository = SpaceRepository(connection)
+    price_per_night = space_repository.find_price_per_night(id)
+    start_date_str = request.form['start_date']
+    end_date_str = request.form['end_date']
+    start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
+    end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
+    status = "pending"
+    total_nights = (end_date - start_date).days
+    total_price = price_per_night * total_nights
+    space_id = id
+    user_id = session.get('id')
+    booking = Booking(None, start_date, end_date, status, total_price, space_id, user_id)
+    new_booking = booking_repository.create(booking)
+    return render_template("/booking_confirmation.html")
 
 # Logout
 @app.route('/logout')
