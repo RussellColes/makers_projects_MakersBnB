@@ -24,6 +24,7 @@ def load_user(user_id):
 
 # == Your Routes Here ==
 
+# Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     connection = get_flask_database_connection(app)
@@ -36,11 +37,21 @@ def login():
             return render_template('invalid_login.html')
         if user and password == user.password:
             login_user(user)
-            return redirect("/", code = 302) #PLEASE CHANGE THE REDIRECT TO THE "HOME" PAGE
+            return redirect('/user', code = 302)
         else:
             return render_template('invalid_login.html')
     return render_template('login.html')
 
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        connection = get_flask_database_connection(app)
+        new_user = User(None, request.form['name'], request.form['email'], request.form['password'])
+        userrepo = UserRepository(connection)
+        userrepo.add(new_user)
+        login_user(new_user)
+        return flask.redirect("/user", code = 302)
+    return render_template('signup.html')
 
 # Returns the homepage
 @app.route('/', methods=['GET'])
@@ -75,7 +86,6 @@ def get_user():
 def get_new_space_page():
     name = request.args.get('name')
     return render_template('new.html', name=name)
-
 
 # Creates a new property/space and redirects to the space index page
 @app.route('/spaces', methods=['POST'])
