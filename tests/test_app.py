@@ -20,7 +20,7 @@ When a user clicks on a space
 The details of the space are displayed
 '''
 def test_click_on_space_link(page, test_web_address, db_connection):
-    db_connection.seed("seeds/spaces.sql")
+    db_connection.seed("seeds/users_and_spaces.sql")
     page.goto(f"http://{test_web_address}/spaces")
     page.click("text=Title 1")
     title_tag = page.locator(".t-title").nth(0)
@@ -46,13 +46,14 @@ We see it in the list of spaces
 '''
 
 def test_create_space(db_connection, page, test_web_address):
-    db_connection.seed("seeds/spaces.sql")
+    db_connection.seed("seeds/users_and_spaces.sql")
     page.goto(f"http://{test_web_address}/user")
 
     page.click("text='List another space'")
 
     page.fill("input[name='title']", "Title 4")
     page.fill("input[name='location']", "Location 4")
+    page.fill("input[name='headline_description']", "Headline Description 4")
     page.fill("input[name='description']", "Description 4")
     page.fill("input[name='price_per_night']", "10")
     page.fill("input[name='user_id']", "4")
@@ -64,6 +65,9 @@ def test_create_space(db_connection, page, test_web_address):
 
     location_element = page.locator(".t-location")
     expect(location_element).to_have_text("Location: Location 4")
+    
+    headline_description_element = page.locator(".t-headline_description")
+    expect(headline_description_element).to_have_text("Headline Description: Headline Description 4")
 
     description_element = page.locator(".t-description")
     expect(description_element).to_have_text("Description: Description 4")
