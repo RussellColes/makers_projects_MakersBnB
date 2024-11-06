@@ -77,10 +77,11 @@ def create_space():
     repository = SpaceRepository(connection)
     title = request.form['title']
     location = request.form['location']
+    headline_description = request.form['headline_description']
     description = request.form['description']
     price_per_night = request.form['price_per_night']
     user_id = request.form['user_id']
-    space = Space(None, title, location, description, price_per_night, user_id)
+    space = Space(None, title, location, headline_description, description, price_per_night, user_id)
     space = repository.create(space)
     return redirect (f"/spaces/{space.id}")
 
