@@ -114,3 +114,28 @@ def test_delete_deletes_availability(db_connection):
         Availability(26, 3, '2024-11-17', True),
         Availability(27, 3, '2024-11-18', True)
     ]
+
+def test_get_only_available_dates(db_connection):
+    db_connection.seed("seeds/users_and_spaces.sql")
+    repository = AvailabilityRepository(db_connection)
+    availability = repository.find_only_if_available(1)
+    assert availability == [
+        Availability(4, 1, '2024-11-13', True),
+        Availability(5, 1, '2024-11-14', True),
+        Availability(6, 1, '2024-11-15', True),
+        Availability(7, 1, '2024-11-16', True),
+        Availability(8, 1, '2024-11-17', True),
+        Availability(9, 1, '2024-11-18', True),
+        ]
+    
+def test_get_only_available_dates_for_2(db_connection):
+    db_connection.seed("seeds/users_and_spaces.sql")
+    repository = AvailabilityRepository(db_connection)
+    availability = repository.find_only_if_available(2)
+    assert availability == [
+        Availability(10, 2, '2024-11-10', True),
+        Availability(11, 2, '2024-11-11', True),
+        Availability(12, 2, '2024-11-12', True),
+        Availability(13, 2, '2024-11-13', True),
+        Availability(18, 2, '2024-11-18', True)
+        ]

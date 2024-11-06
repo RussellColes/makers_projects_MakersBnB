@@ -5,6 +5,7 @@ from lib.user_repository import UserRepository
 from lib.user import User
 from lib.database_connection import get_flask_database_connection
 from lib.spaces_repository import SpaceRepository
+from lib.availability_repository import *
 from lib.space import Space
 
 # Create a new Flask app
@@ -60,9 +61,11 @@ def get_all_spaces():
 @app.route('/spaces/<int:id>', methods=['GET'])
 def get_space(id):
     connection = get_flask_database_connection(app)
-    repository = SpaceRepository(connection)
-    space = repository.find(id)
-    return render_template("space/show_space.html", space=space)
+    space_repository = SpaceRepository(connection)
+    availability_repository = AvailabilityRepository(connection)
+    space = space_repository.find(id)
+    availability = availability_repository.find_only_if_available(id)
+    return render_template("space/show_space.html", space=space, availability=availability)
 
 # Returns the individual user page
 @app.route('/user', methods=['GET'])

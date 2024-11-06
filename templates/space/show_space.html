@@ -14,6 +14,17 @@
     <p class="t-description">Description: {{space.description}}</p>
     <p class="t-price_per_night">Price Per Night: {{space.price_per_night}}</p>
     <p class="t-user_id">Owner: {{space.user_id}}</p>
+    <!-- new code here -->
+    <h3>Available Dates</h3>
+    {% if availability %}
+        <ul>
+            {% for item in availability %}
+                <li>{{ item.date }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No available dates for this space.</p>
+    {% endif %}
     <a href="/spaces">Go back to all spaces</a>
 </body>
 </html>
