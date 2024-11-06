@@ -37,3 +37,14 @@ class AvailabilityRepository:
     def delete(self, id):
         self._connection.execute('DELETE FROM availabilities WHERE id = %s', [id])
         return None
+    
+    def find_only_if_available(self, space_id):
+        rows = self._connection.execute('SELECT * from availabilities WHERE is_available = True and space_id = %s', [space_id])
+        availabilities = []
+        for row in rows:
+            date_str = row["date"].strftime('%Y-%m-%d') if isinstance(row["date"], datetime.date) else row["date"]
+            item = Availability(row["id"], row["space_id"], date_str, row["is_available"])
+            availabilities.append(item)
+        return availabilities
+    
+    
