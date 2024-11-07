@@ -10,13 +10,28 @@
         <link rel="stylesheet" href="/static/style.css" >
     </head>
     <body>
-        <p><strong>Welcome, {{name}}, to Makers BnB</strong></p>
-        <p>Here are your spaces:</p>
-            <ul>
-                <p>London Mansion</p>
-                <p>Manchester Mansion</p>
-                <p>Birmingham house</p>
-            </ul>
+        <h2>Guest Dashboard</h2>
+        <h2>Your Bookings</h2>
+        <p>Spaces you are staying at that have been confirmed</p>
+        {% for booking in bookings %}
+        <p class="t-title">{{booking.status}}</p>
+        {% endfor %}
+
+        <h2>Host Dashboard</h2>
+
+        <h3>Requests</h3>
+        <p>A space that you are hosting that a user would like to book. You have to accept or decline the request.</p>
+        
+
+        
+        <h3>Your Spaces</h3>
+        <p>A list of the spaces that you are hosting.</p>
+        {% for space in spaces %}
+        <p class="t-title">{{space.title}}</p>
+        {% endfor %}
+
+    <a href="/spaces">Go back to all spaces</a>
+
 
         <pre>
             <a href="/new">List another space</a>
