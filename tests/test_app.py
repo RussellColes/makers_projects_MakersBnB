@@ -118,3 +118,12 @@ def test_show_individual_users_bookings(db_connection, page, test_web_address):
     expect(heading).to_have_text("Your Bookings")
     title_element = page.locator(".t-title")
     expect(title_element).to_have_text("Status")
+
+def test_create_booking(db_connection, page, test_web_address):
+    db_connection.seed("seeds/users_and_spaces.sql")
+    page.goto(f"http://{test_web_address}/spaces/1")
+    page.select_option("#start_date", "2024-11-13")
+    page.select_option("#end_date", "2024-11-15")
+    page.click("text='Submit'")
+    text_tag = page.locator(".t-text")
+    expect(text_tag).to_have_text("Your booking request has been submitted!")

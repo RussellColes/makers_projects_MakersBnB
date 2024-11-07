@@ -25,6 +25,52 @@
     {% else %}
         <p>No available dates for this space.</p>
     {% endif %}
+
+    <h4>Request a booking</h4>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Booking Request</title>
+        <script>
+            // This function will check if the start date is earlier than or equal to the end date
+            function validateDates() {
+                const startDate = document.getElementById('start_date').value;
+                const endDate = document.getElementById('end_date').value;
+    
+                // If the end date is earlier than the start date, show an error message
+                if (startDate >= endDate) {
+                    alert("Start date must be before end date.");
+                    return false; // Prevent form submission
+                }
+    
+                // If validation passes, return true to submit the form
+                return true;
+            }
+        </script>
+    </head>
+    <form action="/spaces/{{ space.id }}", method="post" onsubmit="return validateDates()">
+    <p>
+        <label for="start_date">Start Date</label>
+        <select name="start_date" id="start_date" required>
+            {% for availability in availability %}
+                <option value="{{ availability.date }}">{{ availability.date }}</option>
+            {% endfor %}
+        </select>
+    </p>
+
+    <p>
+        <label for="end_date">End Date</label>
+        <select name="end_date" id="end_date" required>
+            {% for availability in availability %}
+                <option value="{{ availability.date }}">{{ availability.date }}</option>
+            {% endfor %}
+        </select>
+    </p>
+    <input type="submit" value="Submit">
+    <p>
+    </form>
     <a href="/spaces">Go back to all spaces</a>
+    </p>
 </body>
 </html>

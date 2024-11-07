@@ -1,13 +1,14 @@
 import os
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from lib.user_repository import UserRepository
 from lib.user import User
 from lib.database_connection import get_flask_database_connection
 from lib.spaces_repository import SpaceRepository
+from lib.booking_repository import *
 from lib.availability_repository import *
 from lib.space import Space
-from lib.booking_repository import BookingRepository
+from datetime import datetime
 
 # Create a new Flask app
 app = Flask(__name__)
@@ -26,6 +27,7 @@ def load_user(user_id):
 
 # == Your Routes Here ==
 
+# Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     connection = get_flask_database_connection(app)
@@ -38,11 +40,21 @@ def login():
             return render_template('invalid_login.html')
         if user and password == user.password:
             login_user(user)
-            return redirect("/", code = 302) #PLEASE CHANGE THE REDIRECT TO THE "HOME" PAGE
+            return redirect('/user', code = 302)
         else:
             return render_template('invalid_login.html')
     return render_template('login.html')
 
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        connection = get_flask_database_connection(app)
+        new_user = User(None, request.form['name'], request.form['email'], request.form['password'])
+        userrepo = UserRepository(connection)
+        userrepo.add(new_user)
+        login_user(new_user)
+        return flask.redirect("/user", code = 302)
+    return render_template('signup.html')
 
 # Returns the homepage
 @app.route('/', methods=['GET'])
@@ -89,7 +101,7 @@ def get_new_space_page():
     return render_template('new.html', name=name)
 
 
-# Creates a new property/ space and redirects to the space index page
+# Creates a new property/space and redirects to the space index page
 @app.route('/spaces', methods=['POST'])
 def create_space():
     connection = get_flask_database_connection(app)
@@ -103,6 +115,26 @@ def create_space():
     space = Space(None, title, location, headline_description, description, price_per_night, user_id)
     space = repository.create(space)
     return redirect (f"/spaces/{space.id}")
+
+# Requests a new booking from data input in the form on the space page
+@app.route('/spaces/<int:id>', methods=['POST'])
+def create_booking(id):
+    connection = get_flask_database_connection(app)
+    booking_repository = BookingRepository(connection)
+    space_repository = SpaceRepository(connection)
+    price_per_night = space_repository.find_price_per_night(id)
+    start_date_str = request.form['start_date']
+    end_date_str = request.form['end_date']
+    start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
+    end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
+    status = "pending"
+    total_nights = (end_date - start_date).days
+    total_price = price_per_night * total_nights
+    space_id = id
+    user_id = session.get('id')
+    booking = Booking(None, start_date, end_date, status, total_price, space_id, user_id)
+    new_booking = booking_repository.create(booking)
+    return render_template("/booking_confirmation.html")
 
 # Logout
 @app.route('/logout')
