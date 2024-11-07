@@ -47,7 +47,7 @@ def login():
             return render_template('invalid_login.html')
     return render_template('login.html')
 
-# Sign Up - DOESN'T WORK
+# Sign Up
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -76,6 +76,7 @@ def get_all_spaces():
 
 # Returns the individual spaces page
 @app.route('/spaces/<int:id>', methods=['GET'])
+@login_required
 def get_space(id):
     connection = get_flask_database_connection(app)
     space_repository = SpaceRepository(connection)
@@ -87,7 +88,11 @@ def get_space(id):
 
 # Returns the individual user page
 @app.route('/user/<int:id>', methods=['GET'])
+@login_required
 def get_user_dashboard(id):
+    if current_user.id != id:
+        id = current_user.id
+        return redirect(f'/user/{id}', code = 302)
     connection = get_flask_database_connection(app)
     user_repository = UserRepository(connection)
     space_repository = SpaceRepository(connection)
@@ -101,6 +106,7 @@ def get_user_dashboard(id):
 
 # Returns the individual add new space page  
 @app.route('/new', methods=['GET'])
+@login_required
 def get_new_space_page():
     name = request.args.get('name')
     return render_template('new.html', name=name)
@@ -108,6 +114,7 @@ def get_new_space_page():
 
 # Creates a new property/space and redirects to the space index page
 @app.route('/spaces', methods=['POST'])
+@login_required
 def create_space():
     connection = get_flask_database_connection(app)
     repository = SpaceRepository(connection)
@@ -132,6 +139,7 @@ def create_availability_get():
 
 # Creates new availability entries to the availabilities table in the database based on dates input in the "add availability" feature
 @app.route('/add_availability', methods=['POST'])
+@login_required
 def create_availability_post():
     connection = get_flask_database_connection(app)
     availability_repo = AvailabilityRepository(connection)
@@ -156,6 +164,7 @@ def create_availability_post():
 
 # Requests a new booking from data input in the form on the space page
 @app.route('/spaces/<int:id>', methods=['POST'])
+@login_required
 def create_booking(id):
     connection = get_flask_database_connection(app)
     booking_repository = BookingRepository(connection)
@@ -177,6 +186,7 @@ def create_booking(id):
 # Confirms a booking and deletes appropriate availability data
 # uses the new find pending booking function in booking repo to then delete availability
 @app.route('/bookings/<int:id>/confirm', methods=['GET'])
+@login_required
 def confirm_booking(id):
     user_id = session.get('id')
     connection = get_flask_database_connection(app)
@@ -190,6 +200,7 @@ def confirm_booking(id):
 
 # Logout
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     return render_template("/logout.html")
