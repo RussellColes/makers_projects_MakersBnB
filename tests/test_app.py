@@ -10,9 +10,9 @@ def test_get_index(page, test_web_address):
     # We load a virtual browser and navigate to the /index page
     page.goto(f"http://{test_web_address}/")
     # We look at the <p> tag
-    p_tag = page.locator("p")
+    text_tag = page.locator(".t-text")
     # We assert that it has the text "This is the homepage."
-    expect(p_tag).to_have_text("Welcome to Makers BnB")
+    expect(text_tag).to_have_text("Please fill in your details:")
 
 
 '''

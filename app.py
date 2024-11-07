@@ -7,8 +7,9 @@ from lib.database_connection import get_flask_database_connection
 from lib.spaces_repository import SpaceRepository
 from lib.booking_repository import *
 from lib.availability_repository import *
+from lib.availability import *
 from lib.space import Space
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Create a new Flask app
 app = Flask(__name__)
@@ -53,12 +54,12 @@ def signup():
         userrepo = UserRepository(connection)
         userrepo.add(new_user)
         login_user(new_user)
-        return flask.redirect("/user", code = 302)
+        return redirect("/user", code = 302)
     return render_template('signup.html')
 
 # Returns the homepage
 @app.route('/', methods=['GET'])
-@login_required
+# @login_required
 def get_index():
     return render_template('index.html')
 
@@ -105,7 +106,40 @@ def create_space():
     user_id = request.form['user_id']
     space = Space(None, title, location, headline_description, description, price_per_night, user_id)
     space = repository.create(space)
-    return redirect (f"/spaces/{space.id}")
+    return redirect (f"/add_availability")
+
+
+# Creates new availability entries to the availabilities table in the database based on dates input in the "add availability" feature
+@app.route('/add_availability', methods=['GET'])
+@login_required
+def create_availability_get():
+    return render_template('add_availability.html')
+
+
+
+# Creates new availability entries to the availabilities table in the database based on dates input in the "add availability" feature
+@app.route('/add_availability', methods=['POST'])
+def create_availability_post():
+    connection = get_flask_database_connection(app)
+    availability_repo = AvailabilityRepository(connection)
+    space = SpaceRepository(connection)
+    
+    start_available_nights = request.form['start_available_nights']
+    end_available_nights = request.form['end_available_nights']
+    start_available_nights_formatted = datetime.strptime(start_available_nights, "%Y-%m-%d")
+    end_available_nights_formatted = datetime.strptime(end_available_nights, "%Y-%m-%d")
+    available_dates_list = [(start_available_nights_formatted + timedelta(days=i)).strftime("%Y-%m-%d") for i in range((end_available_nights_formatted - start_available_nights_formatted).days + 1)]
+    
+    current_user_id = current_user.id
+    print(f"current_user_id = {current_user_id}")
+    most_recent_space_added = space.find_most_recent_space_for_given_user_id(current_user_id)
+    space_id = most_recent_space_added.id
+    print(f"space_id = {space_id}")
+    
+    for item in available_dates_list:
+        availability = Availability(None, space_id, item, True)
+        availability_repo.create(availability)
+    return redirect (f"/spaces")
 
 # Requests a new booking from data input in the form on the space page
 @app.route('/spaces/<int:id>', methods=['POST'])
