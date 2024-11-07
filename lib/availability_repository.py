@@ -47,4 +47,9 @@ class AvailabilityRepository:
             availabilities.append(item)
         return availabilities
     
+    def update_by_date_range(self, space_id, start_date, end_date):
+        self._connection.execute('UPDATE availabilities SET is_available = False WHERE space_id = %s AND date BETWEEN %s and %s', [space_id, start_date, end_date])
+        return None
+    
+    
     

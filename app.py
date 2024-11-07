@@ -3,6 +3,7 @@ from flask import Flask, request, render_template, redirect, session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from lib.user_repository import UserRepository
 from lib.user import User
+from lib.booking import *
 from lib.database_connection import get_flask_database_connection
 from lib.spaces_repository import SpaceRepository
 from lib.booking_repository import *
@@ -93,6 +94,7 @@ def get_user_dashboard(id):
     user = user_repository.find(id)
     spaces = space_repository.find_spaces_linked_to_id(id)
     bookings = booking_repository.find_spaces_linked_to_id(id)
+    # requests = booking_repository.find_user_linked_to_space(id)
     return render_template('user.html', user=user, spaces=spaces, bookings=bookings)
 
 
@@ -137,6 +139,20 @@ def create_booking(id):
     booking = Booking(None, start_date, end_date, status, total_price, space_id, user_id)
     new_booking = booking_repository.create(booking)
     return render_template("/booking_confirmation.html")
+
+# Confirms a booking and deletes appropriate availability data
+# uses the new find pending booking function in booking repo to then delete availability
+@app.route('/bookings/<int:id>/confirm', methods=['GET'])
+def confirm_booking(id):
+    user_id = session.get('id')
+    connection = get_flask_database_connection(app)
+    booking_repository = BookingRepository(connection)
+    availability_repository = AvailabilityRepository(connection)
+    booking = booking_repository.find(id)
+    availability_repository.update_by_date_range(booking.space_id, booking.start_date, booking.end_date) #check if ranges include start and end date!
+    booking.status = 'confirmed'
+    booking_repository.update_status(booking)
+    return redirect (f"/users/{user_id}")
 
 # Logout
 @app.route('/logout')
