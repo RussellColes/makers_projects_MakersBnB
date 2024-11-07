@@ -90,6 +90,9 @@ def get_space(id):
 @app.route('/user/<int:id>', methods=['GET'])
 @login_required
 def get_user_dashboard(id):
+    if current_user.id != id:
+        id = current_user.id
+        return redirect(f'/user/{id}', code = 302)
     connection = get_flask_database_connection(app)
     user_repository = UserRepository(connection)
     space_repository = SpaceRepository(connection)
