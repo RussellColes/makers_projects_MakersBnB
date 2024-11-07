@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Availability</title>
+</head>
+<body>
+    <h1>Add Availability</h1>
+    <h2>Space</h2>
+    <form action="/add_availability" method="POST">
+    <p>
+        <label for="start_available_nights">Add space availability - choose start date</label>
+        <br>
+        <input type="date" name="start_available_nights" id="start_available_nights">
+    </p>
+    <br>
+    <p>
+        <label for="end_available_dates">Add space availability - choose end date</label>
+        <br>
+        <input type="date" name="end_available_nights" id="end_available_nights">
+    </p>  
+        <!-- `type` is submit here, to indicate it is a button -->
+        <!-- `value` is used as the button's text -->
+    <input type="submit" value="Submit Dates">
+    </form>
+</body>
+</html>
