@@ -39,8 +39,8 @@
                 const endDate = document.getElementById('end_date').value;
     
                 // If the end date is earlier than the start date, show an error message
-                if (startDate > endDate) {
-                    alert("Start date must be before or equal to end date.");
+                if (startDate >= endDate) {
+                    alert("Start date must be before end date.");
                     return false; // Prevent form submission
                 }
     
