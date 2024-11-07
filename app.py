@@ -47,7 +47,7 @@ def login():
             return render_template('invalid_login.html')
     return render_template('login.html')
 
-# Sign Up - DOESN'T WORK
+# Sign Up
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
