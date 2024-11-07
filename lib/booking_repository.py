@@ -40,3 +40,16 @@ class BookingRepository:
     def delete(self, id):
         self._connection.execute('DELETE FROM bookings WHERE id = %s', [id])
         return None
+    
+    
+    def find_spaces_linked_to_id(self, user_id):
+        rows = self._connection.execute('SELECT * from bookings WHERE user_id = %s', [user_id])
+        bookings = []
+        for row in rows:
+            start_date_str = row["start_date"].strftime('%Y-%m-%d') if isinstance(row["start_date"], datetime.date) else row["start_date"]
+            
+            end_date_str = row["end_date"].strftime('%Y-%m-%d') if isinstance(row["end_date"], datetime.date) else row["end_date"]
+            
+            item = Booking(row["id"], start_date_str, end_date_str, row["status"], row["total_price"], row["space_id"], row["user_id"])
+            bookings.append(item)
+        return bookings

@@ -43,3 +43,11 @@ def test_delete_deletes_booking(db_connection):
         Booking(2, '2024-11-14', '2024-11-18', 'confirmed', 80, 2, 2),
     ]
 
+def test_get_booking_linked_to_id(db_connection):
+    db_connection.seed("seeds/users_and_spaces.sql")
+    repository = BookingRepository(db_connection)
+    bens_bookings = repository.find_spaces_linked_to_id(1)
+    assert bens_bookings == [
+        Booking(1, '2024-11-10', '2024-11-13', 'confirmed', 30, 1, 1),
+        Booking(3, '2024-11-15', '2024-11-16', 'pending', 60, 3, 1)
+    ]

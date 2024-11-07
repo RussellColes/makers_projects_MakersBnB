@@ -28,3 +28,10 @@ class UserRepository:
             return None
         record = records[0]
         return User(record["id"], record["name"], record["email"], record["password"])
+    
+    
+    def find(self, id):
+        rows = self._connection.execute(
+            'SELECT * from users WHERE id = %s', [id])
+        row = rows[0]
+        return User(row["id"], row["name"], row["email"], row["password"])
