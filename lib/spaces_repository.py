@@ -53,4 +53,13 @@ class SpaceRepository:
     def delete(self, id):
         self._connection.execute('DELETE FROM spaces WHERE id = %s', [id])
         return None
-    
+
+      
+    def find_spaces_linked_to_id(self, user_id):
+        rows = self._connection.execute('SELECT * from spaces WHERE user_id = %s', [user_id])
+        spaces = []
+        for row in rows:
+            item = Space(row["id"], row["title"],
+                    row["location"], row["headline_description"], row["description"], row["price_per_night"], row["user_id"])
+            spaces.append(item)
+        return spaces
