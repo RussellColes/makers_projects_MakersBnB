@@ -40,11 +40,12 @@ def login():
             return render_template('invalid_login.html')
         if user and password == user.password:
             login_user(user)
-            return redirect('/user', code = 302)
+            return redirect('/spaces', code = 302)
         else:
             return render_template('invalid_login.html')
     return render_template('login.html')
 
+# Sign Up - DOESN'T WORK
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -52,23 +53,24 @@ def signup():
         new_user = User(None, request.form['name'], request.form['email'], request.form['password'])
         userrepo = UserRepository(connection)
         userrepo.add(new_user)
+        new_user = userrepo.get_from_email(request.form['email'])
         login_user(new_user)
-        return flask.redirect("/user", code = 302)
+        return redirect("/spaces", code = 302)
     return render_template('signup.html')
 
 # Returns the homepage
 @app.route('/', methods=['GET'])
-@login_required
 def get_index():
     return render_template('index.html')
 
 # Returns the spaces page
 @app.route('/spaces', methods=['GET'])
+@login_required
 def get_all_spaces():
     connection = get_flask_database_connection(app)
     repository = SpaceRepository(connection)
     spaces = repository.all()
-    return render_template("/spaces.html", spaces=spaces)
+    return render_template("/spaces.html", spaces=spaces, user_id=current_user.id)
 
 # Returns the individual spaces page
 @app.route('/spaces/<int:id>', methods=['GET'])
@@ -140,7 +142,7 @@ def create_booking(id):
 @app.route('/logout')
 def logout():
     logout_user()
-    return 'You have been logged out.'
+    return render_template("/logout.html")
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
