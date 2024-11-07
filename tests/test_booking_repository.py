@@ -60,3 +60,12 @@ def test_pending_bookings_relating_to_appropriate_user_2(db_connection):
     spaces_repository = SpaceRepository(db_connection)
     booking = booking_repository.find_pending_bookings(2)
     assert booking == []
+
+def test_get_booking_linked_to_id(db_connection):
+    db_connection.seed("seeds/users_and_spaces.sql")
+    repository = BookingRepository(db_connection)
+    bens_bookings = repository.find_spaces_linked_to_id(1)
+    assert bens_bookings == [
+        Booking(1, '2024-11-10', '2024-11-13', 'confirmed', 30, 1, 1),
+        Booking(3, '2024-11-15', '2024-11-16', 'pending', 60, 3, 1)
+    ]

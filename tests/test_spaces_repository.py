@@ -47,3 +47,13 @@ def test_delete_deletes_record(db_connection):
     assert result == [
         Space(1, 'Title 1', 'Location 1', 'Headline description 1', 'Description 1', 10, 1),
         Space(2, 'Title 2', 'Location 2', 'Headline description 2', 'Description 2', 20, 2)]
+
+
+
+def test_get_spaces_linked_to_id(db_connection):
+    db_connection.seed("seeds/users_and_spaces.sql")
+    repository = SpaceRepository(db_connection)
+    bens_spaces = repository.find_spaces_linked_to_id(1)
+    assert bens_spaces == [
+        Space(1, 'Title 1', 'Location 1', 'Headline description 1', 'Description 1', 10, 1)
+    ]

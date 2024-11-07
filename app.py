@@ -81,17 +81,27 @@ def get_space(id):
     availability = availability_repository.find_only_if_available(id)
     return render_template("space/show_space.html", space=space, availability=availability)
 
+
 # Returns the individual user page
-@app.route('/user', methods=['GET'])
-def get_user():
-    name = request.args.get('name')
-    return render_template('user.html', name=name)
+@app.route('/user/<int:id>', methods=['GET'])
+def get_user_dashboard(id):
+    connection = get_flask_database_connection(app)
+    user_repository = UserRepository(connection)
+    space_repository = SpaceRepository(connection)
+    booking_repository = BookingRepository(connection)
+    user = user_repository.find(id)
+    spaces = space_repository.find_spaces_linked_to_id(id)
+    bookings = booking_repository.find_spaces_linked_to_id(id)
+    # requests = booking_repository.find_user_linked_to_space(id)
+    return render_template('user.html', user=user, spaces=spaces, bookings=bookings)
+
 
 # Returns the individual add new space page  
 @app.route('/new', methods=['GET'])
 def get_new_space_page():
     name = request.args.get('name')
     return render_template('new.html', name=name)
+
 
 # Creates a new property/space and redirects to the space index page
 @app.route('/spaces', methods=['POST'])
