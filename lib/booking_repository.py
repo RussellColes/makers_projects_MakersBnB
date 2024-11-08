@@ -82,7 +82,7 @@ class BookingRepository:
         return bookings
     
     
-    def find_user_linked_to_space(self, user_id):
-        rows = self._connection.execute('SELECT users.name, bookings.user_id AS guest_id, spaces.user_id AS host_id, bookings.space_id,  bookings.status, spaces.title FROM bookings JOIN spaces on bookings.space_id = spaces.id JOIN users on users.id = bookings.user_id;')
-        results = rows.fetchall()
-        return results
+    def find_pending_request_from_guest(self, user_id):
+        rows = self._connection.execute("""SELECT users.name AS guest_name, bookings.user_id AS guest_id, spaces.user_id AS host_id, bookings.space_id, bookings.status, spaces.title FROM bookings JOIN spaces on bookings.space_id = spaces.id JOIN users on users.id = bookings.user_id WHERE bookings.user_id = %s AND bookings.status = 'pending'""", [user_id])
+        print (rows)
+        return rows

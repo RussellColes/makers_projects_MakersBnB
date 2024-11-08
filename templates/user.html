@@ -9,7 +9,7 @@
         <nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd;">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">
-                    <img src="/static/images/logo.png" alt="logo" width="50" height="50">
+                    <img src="/static/images/our_logo.png" alt="logo" width="50" height="50">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -32,23 +32,26 @@
                 </a>
             </div>
         </nav>
+
+        <div class="container my-4">
         <h2>Guest Dashboard</h2>
-        <h2>Your Bookings</h2>
+
+        <p></p><h3>Your Bookings</h3></p>
         <p>Spaces you are staying at that have been confirmed</p>
         {% for booking in bookings %}
+        <p class="t-title">{{spaces.title}}</p>
         <p class="t-title">{{booking.status}}</p>
         {% endfor %}
 
-        <div class="container my-4">
             <h2>Host Dashboard</h2>
 
-            <h3>Requests</h3>
+            <p></p><h3>Requests</h3></p>
+
             <p>A space that you are hosting that a user would like to book. You have to accept or decline the request.</p>
-            {% if bookings | selectattr("status", "equalto", "pending") | list %}
-                {% for booking in bookings %}
-                    {% if booking.status == "pending" %}
-                        <p class="t-title">{{ booking.status }}</p>
-                    {% endif %}
+            {% if requests %}
+                {% for request in requests %}
+                <p class="t-title">Reena Sewraz would like to book {{request.title}}</p>
+          
                 {% endfor %}
                 <!-- new test code starts here -->
                 <form action="/user/{{ user.id }}" method="post" style="display: inline;">
@@ -64,8 +67,19 @@
             {% else %}
                 <p>No current requests</p>
             {% endif %}
-        </div>
 
+        <p></p><h3>Confirmed bookings</h3></p>
+
+        <p>Spaces that have been booked</p>
+        {% if requests %}
+            {% for request in requests %}
+            <p class="t-title">{{request.guest_name}} would like to book {{ request.title }}</p>
+      
+            {% endfor %}
+        {% else %}
+            <p>No current bookings</p>
+        {% endif %}
+    </div>
         <div class="container my-4">
             <h3>Your Spaces</h3>
             <p>A list of the spaces that you are hosting.</p>
@@ -87,9 +101,12 @@
                 </div>
             {% endif %}
             </div>
-            <a href="/new">List a space</a>
+            <p><a class="btn btn-primary" href="/new">List another space</a></p>
+
+            <p><a class="btn btn-primary" href="/spaces"role="button">Back to all spaces</a>
+            <a class="btn btn-primary" href="/logout"role="button">Log out</a></p>
         </div>
-        
+
     <a href="/spaces">Go back to all spaces</a>
     <br>
     <a href="/logout">Logout</a>
