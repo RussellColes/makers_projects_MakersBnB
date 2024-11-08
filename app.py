@@ -83,7 +83,7 @@ def get_space(id):
     availability_repository = AvailabilityRepository(connection)
     space = space_repository.find(id)
     availability = availability_repository.find_only_if_available(id)
-    return render_template("space/show_space.html", space=space, availability=availability)
+    return render_template("show_space.html", space=space, availability=availability)
 
 
 # Returns the individual user page
@@ -123,7 +123,7 @@ def create_space():
     headline_description = request.form['headline_description']
     description = request.form['description']
     price_per_night = request.form['price_per_night']
-    user_id = request.form['user_id']
+    user_id = current_user.id
     space = Space(None, title, location, headline_description, description, price_per_night, user_id)
     space = repository.create(space)
     return redirect (f"/add_availability")
