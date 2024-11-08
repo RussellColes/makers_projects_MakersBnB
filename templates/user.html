@@ -50,6 +50,17 @@
                         <p class="t-title">{{ booking.status }}</p>
                     {% endif %}
                 {% endfor %}
+                <!-- new test code starts here -->
+                <form action="/user/{{ user.id }}" method="post" style="display: inline;">
+                    <input type="hidden" name="action" value="confirm">
+                    <button type="submit">Confirm</button>
+                </form>
+                <!-- <form action="/user/cancelled/{{ user.id }}" method="post" style="display: inline;">
+                    <input type="hidden" name="action" value="cancel">
+                    <button type="submit">Cancel</button>
+                </form> -->
+            
+                <!-- test code ends here -->
             {% else %}
                 <p>No current requests</p>
             {% endif %}

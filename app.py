@@ -183,18 +183,36 @@ def create_booking(id):
 
 # Confirms a booking and deletes appropriate availability data
 # uses the new find pending booking function in booking repo to then delete availability
-@app.route('/bookings/<int:id>/confirm', methods=['GET'])
+@app.route('/user/<int:id>', methods=['POST'])
 @login_required
 def confirm_booking(id):
     user_id = session.get('id')
+    print(user_id)
     connection = get_flask_database_connection(app)
     booking_repository = BookingRepository(connection)
     availability_repository = AvailabilityRepository(connection)
     booking = booking_repository.find(id)
+    print(booking)
     availability_repository.update_by_date_range(booking.space_id, booking.start_date, booking.end_date) #check if ranges include start and end date!
     booking.status = 'confirmed'
-    booking_repository.update_status(booking)
-    return redirect (f"/user/{user_id}")
+    booking_repository.confirm_booking(booking)
+    return render_template("/user.html")
+
+# cancels booking
+
+# @app.route('/user/cancelled/<int:id>', methods=['POST'])
+# @login_required
+# def cancel_booking(id):
+#     user_id = session.get('id')
+#     connection = get_flask_database_connection(app)
+#     booking_repository = BookingRepository(connection)
+#     booking = booking_repository.find(id)
+#     booking.status = 'cancelled'
+#     print(booking)
+#     booking_repository.update_status(booking)
+#     return redirect (f"/user/2")
+#     booking_repository.update_status(booking)
+#     return redirect (f"/user/{user_id}")
 
 # Rerouting /user to /user/<id>
 @app.route('/user', methods=['GET'])
