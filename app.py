@@ -72,7 +72,7 @@ def get_all_spaces():
     connection = get_flask_database_connection(app)
     repository = SpaceRepository(connection)
     spaces = repository.all()
-    return render_template("/spaces.html", spaces=spaces, user_id=current_user.id)
+    return render_template("/spaces.html", spaces=spaces)
 
 # Returns the individual spaces page
 @app.route('/spaces/<int:id>', methods=['GET'])
@@ -83,7 +83,7 @@ def get_space(id):
     availability_repository = AvailabilityRepository(connection)
     space = space_repository.find(id)
     availability = availability_repository.find_only_if_available(id)
-    return render_template("space/show_space.html", space=space, availability=availability)
+    return render_template("show_space.html", space=space, availability=availability)
 
 
 # Returns the individual user page
@@ -113,7 +113,7 @@ def get_new_space_page():
     return render_template('new.html', name=name)
 
 
-# Creates a new property/space and redirects to the space index page
+# Creates a new property/space and redirects to the add_availability page
 @app.route('/spaces', methods=['POST'])
 @login_required
 def create_space():
@@ -124,13 +124,13 @@ def create_space():
     headline_description = request.form['headline_description']
     description = request.form['description']
     price_per_night = request.form['price_per_night']
-    user_id = request.form['user_id']
+    user_id = current_user.id
     space = Space(None, title, location, headline_description, description, price_per_night, user_id)
     space = repository.create(space)
     return redirect (f"/add_availability")
 
 
-# Creates new availability entries to the availabilities table in the database based on dates input in the "add availability" feature
+# Returns page to allow hosts to add availability
 @app.route('/add_availability', methods=['GET'])
 @login_required
 def create_availability_get():
@@ -153,10 +153,8 @@ def create_availability_post():
     available_dates_list = [(start_available_nights_formatted + timedelta(days=i)).strftime("%Y-%m-%d") for i in range((end_available_nights_formatted - start_available_nights_formatted).days + 1)]
     
     current_user_id = current_user.id
-    print(f"current_user_id = {current_user_id}")
     most_recent_space_added = space.find_most_recent_space_for_given_user_id(current_user_id)
     space_id = most_recent_space_added.id
-    print(f"space_id = {space_id}")
     
     for item in available_dates_list:
         availability = Availability(None, space_id, item, True)
@@ -186,25 +184,49 @@ def create_booking(id):
 
 # Confirms a booking and deletes appropriate availability data
 # uses the new find pending booking function in booking repo to then delete availability
-@app.route('/bookings/<int:id>/confirm', methods=['GET'])
+@app.route('/user/<int:id>', methods=['POST'])
 @login_required
 def confirm_booking(id):
     user_id = session.get('id')
+    print(user_id)
     connection = get_flask_database_connection(app)
     booking_repository = BookingRepository(connection)
     availability_repository = AvailabilityRepository(connection)
     booking = booking_repository.find(id)
+    print(booking)
     availability_repository.update_by_date_range(booking.space_id, booking.start_date, booking.end_date) #check if ranges include start and end date!
     booking.status = 'confirmed'
-    booking_repository.update_status(booking)
-    return redirect (f"/users/{user_id}")
+    booking_repository.confirm_booking(booking)
+    return render_template("/user.html")
+
+# cancels booking
+
+# @app.route('/user/cancelled/<int:id>', methods=['POST'])
+# @login_required
+# def cancel_booking(id):
+#     user_id = session.get('id')
+#     connection = get_flask_database_connection(app)
+#     booking_repository = BookingRepository(connection)
+#     booking = booking_repository.find(id)
+#     booking.status = 'cancelled'
+#     print(booking)
+#     booking_repository.update_status(booking)
+#     return redirect (f"/user/2")
+#     booking_repository.update_status(booking)
+#     return redirect (f"/user/{user_id}")
+
+# Rerouting /user to /user/<id>
+@app.route('/user', methods=['GET'])
+@login_required
+def reroute_user():
+    return redirect (f"/user/{current_user.id}")
 
 # Logout
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return render_template("/logout.html")
+    return render_template("/logout.html", id=current_user.id)
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database

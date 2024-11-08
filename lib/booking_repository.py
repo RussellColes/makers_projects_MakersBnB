@@ -60,10 +60,14 @@ class BookingRepository:
             bookings.append(item)
         return bookings
     
-    def update_status(self, booking):
-        self._connection.execute(
-            'UPDATE bookings SET status = %s WHERE id = %s', [booking.status, booking.id])
+    def confirm_booking(self, booking):
+        print(booking)
+        self._connection.execute("UPDATE bookings SET status = 'confirmed'")
         return None
+    
+    # def cancel_booking(self, booking):
+    #     self._connection.execute("UPDATE bookings SET status = 'cancelled' WHERE id = %s", [booking.id])
+    #     return None
     
     def find_spaces_linked_to_id(self, user_id):
         rows = self._connection.execute('SELECT * from bookings WHERE user_id = %s', [user_id])

@@ -53,6 +53,17 @@
                 <p class="t-title">Reena Sewraz would like to book {{request.title}}</p>
           
                 {% endfor %}
+                <!-- new test code starts here -->
+                <form action="/user/{{ user.id }}" method="post" style="display: inline;">
+                    <input type="hidden" name="action" value="confirm">
+                    <button type="submit">Confirm</button>
+                </form>
+                <!-- <form action="/user/cancelled/{{ user.id }}" method="post" style="display: inline;">
+                    <input type="hidden" name="action" value="cancel">
+                    <button type="submit">Cancel</button>
+                </form> -->
+            
+                <!-- test code ends here -->
             {% else %}
                 <p>No current requests</p>
             {% endif %}
@@ -95,12 +106,10 @@
             <p><a class="btn btn-primary" href="/spaces"role="button">Back to all spaces</a>
             <a class="btn btn-primary" href="/logout"role="button">Log out</a></p>
         </div>
-        
 
-
-
-
-</div>
+    <a href="/spaces">Go back to all spaces</a>
+    <br>
+    <a href="/logout">Logout</a>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
