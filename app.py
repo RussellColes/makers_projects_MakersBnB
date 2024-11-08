@@ -152,10 +152,8 @@ def create_availability_post():
     available_dates_list = [(start_available_nights_formatted + timedelta(days=i)).strftime("%Y-%m-%d") for i in range((end_available_nights_formatted - start_available_nights_formatted).days + 1)]
     
     current_user_id = current_user.id
-    print(f"current_user_id = {current_user_id}")
     most_recent_space_added = space.find_most_recent_space_for_given_user_id(current_user_id)
     space_id = most_recent_space_added.id
-    print(f"space_id = {space_id}")
     
     for item in available_dates_list:
         availability = Availability(None, space_id, item, True)
