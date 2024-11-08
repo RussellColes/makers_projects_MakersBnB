@@ -50,7 +50,7 @@
             <p>A space that you are hosting that a user would like to book. You have to accept or decline the request.</p>
             {% if requests %}
                 {% for request in requests %}
-                <p class="t-title">Reena Sewraz would like to book {{request.title}}</p>
+                <p class="t-title">Max Joseph would like to book {{request.title}}</p>
           
                 {% endfor %}
                 <!-- new test code starts here -->
@@ -71,14 +71,16 @@
         <p></p><h3>Confirmed bookings</h3></p>
 
         <p>Spaces that have been booked</p>
-        {% if requests %}
-            {% for request in requests %}
-            <p class="t-title">{{request.guest_name}} would like to book {{ request.title }}</p>
-      
-            {% endfor %}
-        {% else %}
-            <p>No current bookings</p>
-        {% endif %}
+
+    <!-- {% if requests %}
+        {% for request in requests %}
+        <p class="t-title">{{request.guest_name}} would like to book {{ request.title }}</p>
+  
+        {% endfor %}
+    {% else %}
+        <p>No current bookings</p>
+    {% endif %} -->
+
     </div>
         <div class="container my-4">
             <h3>Your Spaces</h3>
