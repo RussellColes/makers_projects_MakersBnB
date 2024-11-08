@@ -226,7 +226,7 @@ def reroute_user():
 @login_required
 def logout():
     logout_user()
-    return render_template("/logout.html", id=current_user.id)
+    return render_template("/logout.html")
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
