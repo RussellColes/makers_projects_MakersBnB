@@ -100,8 +100,9 @@ def get_user_dashboard(id):
     user = user_repository.find(id)
     spaces = space_repository.find_spaces_linked_to_id(id)
     bookings = booking_repository.find_spaces_linked_to_id(id)
-    # requests = booking_repository.find_user_linked_to_space(id)
-    return render_template('user.html', user=user, spaces=spaces, bookings=bookings)
+    requests = booking_repository.find_pending_request_from_guest(id)
+    print (requests)
+    return render_template('user.html', user=user, spaces=spaces, bookings=bookings, requests=requests)
 
 
 # Returns the individual add new space page  
