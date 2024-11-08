@@ -54,7 +54,7 @@ CREATE TABLE bookings (
         on delete cascade
 );   
 
-INSERT INTO bookings (start_date, end_date, status, total_price, space_id, user_id) VALUES ('2024-11-10', '2024-11-13', 'confirmed', 30, 1, 3);
+INSERT INTO bookings (start_date, end_date, status, total_price, space_id, user_id) VALUES ('2024-11-10', '2024-11-13', 'confirmed', 30, 1, 4);
 INSERT INTO bookings (start_date, end_date, status, total_price, space_id, user_id) VALUES ('2024-11-14', '2024-11-18', 'confirmed', 80, 2, 4);
 INSERT INTO bookings (start_date, end_date, status, total_price, space_id, user_id) VALUES ('2024-11-15', '2024-11-16', 'pending', 60, 3, 2);
 

@@ -26,10 +26,7 @@ class SpaceRepository:
     def find_most_recent_space_for_given_user_id(self, user_id):
         rows = self._connection.execute(
             'SELECT * from spaces WHERE user_id = %s', [user_id])
-        print(f"user id = {user_id}")
-        print(f"list of rows - {rows}")
         row = rows[-1]
-        print(f"row -1 which was selected: {row}")
         return Space(row["id"], row["title"], row["location"], row["headline_description"], 
                     row["description"], row["price_per_night"], row["user_id"])
     
