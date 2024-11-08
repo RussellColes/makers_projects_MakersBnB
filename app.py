@@ -72,7 +72,7 @@ def get_all_spaces():
     connection = get_flask_database_connection(app)
     repository = SpaceRepository(connection)
     spaces = repository.all()
-    return render_template("/spaces.html", spaces=spaces, user_id=current_user.id)
+    return render_template("/spaces.html", spaces=spaces)
 
 # Returns the individual spaces page
 @app.route('/spaces/<int:id>', methods=['GET'])
@@ -194,14 +194,20 @@ def confirm_booking(id):
     availability_repository.update_by_date_range(booking.space_id, booking.start_date, booking.end_date) #check if ranges include start and end date!
     booking.status = 'confirmed'
     booking_repository.update_status(booking)
-    return redirect (f"/users/{user_id}")
+    return redirect (f"/user/{user_id}")
+
+# Rerouting /user to /user/<id>
+@app.route('/user', methods=['GET'])
+@login_required
+def reroute_user():
+    return redirect (f"/user/{current_user.id}")
 
 # Logout
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return render_template("/logout.html")
+    return render_template("/logout.html", id=current_user.id)
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
