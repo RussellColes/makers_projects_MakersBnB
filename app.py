@@ -72,7 +72,7 @@ def get_all_spaces():
     connection = get_flask_database_connection(app)
     repository = SpaceRepository(connection)
     spaces = repository.all()
-    return render_template("/spaces.html", spaces=spaces, user_id=current_user.id)
+    return render_template("/spaces.html", spaces=spaces)
 
 # Returns the individual spaces page
 @app.route('/spaces/<int:id>', methods=['GET'])
@@ -112,7 +112,7 @@ def get_new_space_page():
     return render_template('new.html', name=name)
 
 
-# Creates a new property/space and redirects to the space index page
+# Creates a new property/space and redirects to the add_availability page
 @app.route('/spaces', methods=['POST'])
 @login_required
 def create_space():
@@ -129,7 +129,7 @@ def create_space():
     return redirect (f"/add_availability")
 
 
-# Creates new availability entries to the availabilities table in the database based on dates input in the "add availability" feature
+# Returns page to allow hosts to add availability
 @app.route('/add_availability', methods=['GET'])
 @login_required
 def create_availability_get():
@@ -211,13 +211,21 @@ def confirm_booking(id):
 #     print(booking)
 #     booking_repository.update_status(booking)
 #     return redirect (f"/user/2")
+#     booking_repository.update_status(booking)
+#     return redirect (f"/user/{user_id}")
+
+# Rerouting /user to /user/<id>
+@app.route('/user', methods=['GET'])
+@login_required
+def reroute_user():
+    return redirect (f"/user/{current_user.id}")
 
 # Logout
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return render_template("/logout.html")
+    return render_template("/logout.html", id=current_user.id)
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database

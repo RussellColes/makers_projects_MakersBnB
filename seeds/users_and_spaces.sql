@@ -31,9 +31,12 @@ CREATE TABLE spaces (
     on delete cascade
 );
 
-INSERT INTO spaces (title, location, headline_description, description, price_per_night, user_id) VALUES ('Title 1', 'Location 1', 'Headline description 1', 'Description 1', 10, 1);
-INSERT INTO spaces (title, location, headline_description, description, price_per_night, user_id) VALUES ('Title 2', 'Location 2', 'Headline description 2', 'Description 2', 20, 2);
-INSERT INTO spaces (title, location, headline_description, description, price_per_night, user_id) VALUES ('Title 3', 'Location 3', 'Headline description 3', 'Description 3', 30, 1);
+INSERT INTO spaces (title, location, headline_description, description, price_per_night, user_id) VALUES ('Holiday Paradise', 'New York', 'Apartment overlooking Times Square', 'Beautiful 3 bed appartment overlooking Times Square. Excellent transport links.', 150, 2);
+INSERT INTO spaces (title, location, headline_description, description, price_per_night, user_id) VALUES ('Buckingham Palace', 'London', 'Palace with guards', 'Entire 775 room palace. Exquisite decor and a staff to wait on your every need.', 2000, 4);
+INSERT INTO spaces (title, location, headline_description, description, price_per_night, user_id) VALUES ('Palatial House', 'Paris', 'House in centre of city', 'Sleeps 12. 5 bedroom mansion house near the Arc de Triomphe. Concierge in a gated community', 400, 1);
+INSERT INTO spaces (title, location, headline_description, description, price_per_night, user_id) VALUES ('Stunning Appartment', 'Munich', 'Beautiful views over the city', '2 bedroom appartment in centre of city. Perfect for sampling the delights of Oktoberfest', 100, 3);
+INSERT INTO spaces (title, location, headline_description, description, price_per_night, user_id) VALUES ('The White House', 'Washington DC', 'Den of iniquity', 'Grand appartment overlooking the grounds. Excellent security, but may take a while to get guests in.', 1500, 2);
+
 
 CREATE TABLE bookings (
     id SERIAL PRIMARY KEY,
@@ -92,3 +95,21 @@ INSERT INTO availabilities (space_id, date, is_available) VALUES (3, '2024-11-15
 INSERT INTO availabilities (space_id, date, is_available) VALUES (3, '2024-11-16', True);
 INSERT INTO availabilities (space_id, date, is_available) VALUES (3, '2024-11-17', True);
 INSERT INTO availabilities (space_id, date, is_available) VALUES (3, '2024-11-18', True); 
+INSERT INTO availabilities (space_id, date, is_available) VALUES (4, '2024-11-10', True);
+INSERT INTO availabilities (space_id, date, is_available) VALUES (4, '2024-11-11', True);
+INSERT INTO availabilities (space_id, date, is_available) VALUES (4, '2024-11-12', True);
+INSERT INTO availabilities (space_id, date, is_available) VALUES (4, '2024-11-13', True);
+INSERT INTO availabilities (space_id, date, is_available) VALUES (4, '2024-11-14', True);
+INSERT INTO availabilities (space_id, date, is_available) VALUES (4, '2024-11-15', False);
+INSERT INTO availabilities (space_id, date, is_available) VALUES (4, '2024-11-16', True);
+INSERT INTO availabilities (space_id, date, is_available) VALUES (4, '2024-11-17', True);
+INSERT INTO availabilities (space_id, date, is_available) VALUES (4, '2024-11-18', True); 
+INSERT INTO availabilities (space_id, date, is_available) VALUES (5, '2024-11-10', True);
+INSERT INTO availabilities (space_id, date, is_available) VALUES (5, '2024-11-11', True);
+INSERT INTO availabilities (space_id, date, is_available) VALUES (5, '2024-11-12', True);
+INSERT INTO availabilities (space_id, date, is_available) VALUES (5, '2024-11-13', True);
+INSERT INTO availabilities (space_id, date, is_available) VALUES (5, '2024-11-14', True);
+INSERT INTO availabilities (space_id, date, is_available) VALUES (5, '2024-11-15', False);
+INSERT INTO availabilities (space_id, date, is_available) VALUES (5, '2024-11-16', True);
+INSERT INTO availabilities (space_id, date, is_available) VALUES (5, '2024-11-17', True);
+INSERT INTO availabilities (space_id, date, is_available) VALUES (5, '2024-11-18', True); 
