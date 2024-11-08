@@ -112,7 +112,7 @@ def get_new_space_page():
     return render_template('new.html', name=name)
 
 
-# Creates a new property/space and redirects to the space index page
+# Creates a new property/space and redirects to the add_availability page
 @app.route('/spaces', methods=['POST'])
 @login_required
 def create_space():
@@ -129,7 +129,7 @@ def create_space():
     return redirect (f"/add_availability")
 
 
-# Creates new availability entries to the availabilities table in the database based on dates input in the "add availability" feature
+# Returns page to allow hosts to add availability
 @app.route('/add_availability', methods=['GET'])
 @login_required
 def create_availability_get():
