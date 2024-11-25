@@ -1,3 +1,5 @@
+This project was a week long project using python to create a basic version of the AirBnB website. It was embarked upon following 7 weeks of intensive course and involved some elements we had worked with before and some elements which needed to be researched. We worked in a team of 5 during one week, often pair programming, to complete the task. There are still improvements we would like to make, but these will have to wait for a later date as we move on with the course!
+
 # MakersBnB Python Project Seed
 
 This repo contains the seed codebase for the MakersBnB project in Python (using 
